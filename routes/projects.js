@@ -20,6 +20,17 @@ router.get('/:userId', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { name, type, folders, statuses, docData, labels, userId } = req.body
+
+    await prisma.user.upsert({
+      where: { id: userId },
+      update: {},
+      create: {
+        id: userId,
+        email: `${userId}@storytelling.app`,
+        name: userId,
+      },
+    })
+
     const project = await prisma.project.create({
       data: {
         name,
