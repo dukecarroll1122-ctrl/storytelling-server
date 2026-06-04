@@ -20,27 +20,13 @@ router.get('/:userId', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { name, type, folders, statuses, docData, labels, userId } = req.body
-
     await prisma.user.upsert({
       where: { id: userId },
       update: {},
-      create: {
-        id: userId,
-        email: `${userId}@storytelling.app`,
-        name: userId,
-      },
+      create: { id: userId, email: `${userId}@storytelling.app`, name: userId },
     })
-
     const project = await prisma.project.create({
-      data: {
-        name,
-        type,
-        folders,
-        statuses,
-        docData,
-        labels,
-        userId,
-      },
+      data: { name, type, folders, statuses, docData, labels, userId },
     })
     res.json(project)
   } catch (error) {
@@ -55,15 +41,7 @@ router.put('/:id', async (req, res) => {
     const { name, type, folders, statuses, docData, labels } = req.body
     const project = await prisma.project.update({
       where: { id },
-      data: {
-        name,
-        type,
-        folders,
-        statuses,
-        docData,
-        labels,
-        lastEdited: new Date(),
-      },
+      data: { name, type, folders, statuses, docData, labels, lastEdited: new Date() },
     })
     res.json(project)
   } catch (error) {
@@ -75,13 +53,49 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params
-    await prisma.project.delete({
-      where: { id },
-    })
+    await prisma.project.delete({ where: { id } })
     res.json({ success: true })
   } catch (error) {
     console.error('Error deleting project:', error)
     res.status(500).json({ error: 'Failed to delete project' })
+  }
+})
+
+router.post('/:projectId/documents', async (req, res) => {
+  try {
+    const { projectId } = req.params
+    const { docId, content } = req.body
+    const existing = await prisma.document.findFirst({
+      where: { projectId, docId }
+    })
+    let document
+    if (existing) {
+      document = await prisma.document.update({
+        where: { id: existing.id },
+        data: { content },
+      })
+    } else {
+      document = await prisma.document.create({
+        data: { projectId, docId, content },
+      })
+    }
+    res.json(document)
+  } catch (error) {
+    console.error('Error saving document:', error)
+    res.status(500).json({ error: 'Failed to save document' })
+  }
+})
+
+router.get('/:projectId/documents/:docId', async (req, res) => {
+  try {
+    const { projectId, docId } = req.params
+    const document = await prisma.document.findFirst({
+      where: { projectId, docId },
+    })
+    res.json(document || { content: '' })
+  } catch (error) {
+    console.error('Error fetching document:', error)
+    res.status(500).json({ error: 'Failed to fetch document' })
   }
 })
 
