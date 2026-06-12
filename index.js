@@ -8,7 +8,14 @@ const app = express()
 const PORT = process.env.PORT || 3001
 
 app.use(cors())
-app.use(express.json())
+
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/payments/webhook') {
+    next()
+  } else {
+    express.json()(req, res, next)
+  }
+})
 
 app.get('/', (req, res) => {
   res.json({ message: 'Storytelling API is running' })
