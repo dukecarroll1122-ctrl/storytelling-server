@@ -99,4 +99,17 @@ router.get('/:projectId/documents/:docId', async (req, res) => {
   }
 })
 
+router.get('/user/:userId/plan', async (req, res) => {
+  try {
+    const { userId } = req.params
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    })
+    res.json({ plan: user?.plan || 'free' })
+  } catch (error) {
+    console.error('Error fetching user plan:', error)
+    res.status(500).json({ plan: 'free' })
+  }
+})
+
 export default router
