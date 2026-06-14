@@ -3,6 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import projectRoutes from './routes/projects.js'
 import paymentRoutes from './routes/payments.js'
+import aiRoutes from './routes/ai.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -23,7 +24,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/projects', projectRoutes)
 app.use('/api/payments', paymentRoutes)
-
+app.use('/api/ai', aiRoutes)
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
