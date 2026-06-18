@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx prisma migrate deploy && node index.js",
+    "start":"node index.js",
     "dev": "nodemon index.js"
   },
   "keywords": [],
