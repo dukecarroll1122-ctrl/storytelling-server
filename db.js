@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client'
+import pkg from '@prisma/client'
+const { PrismaClient } = pkg
 import { PrismaPg } from '@prisma/adapter-pg'
-import pkg from 'pg'
-const { Pool } = pkg
+import pgPkg from 'pg'
+const { Pool } = pgPkg
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
