@@ -26,7 +26,7 @@ router.post('/create-checkout-session', async (req, res) => {
       payment_method_types: ['card'],
       line_items: [{ price: priceId, quantity: 1 }],
       mode: mode,
-      success_url: 'http://localhost:5173?payment=success',
+      success_url: 'https://storytelling-production.up.railway.app?payment=success',
       cancel_url: 'http://localhost:5173?payment=cancelled',
       metadata: { userId },
     })
