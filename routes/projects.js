@@ -20,6 +20,11 @@ router.get('/:userId', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { name, type, folders, statuses, docData, labels, userId } = req.body
+
+    if (!name || !type || !userId) {
+      return res.status(400).json({ error: 'name, type, and userId are required' })
+    }
+
     await prisma.user.upsert({
       where: { id: userId },
       update: {},
